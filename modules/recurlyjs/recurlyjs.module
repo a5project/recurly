@@ -19,7 +19,6 @@ function recurlyjs_recurly_url_info($operation, $context) {
   $entity_type_id = \Drupal::config('recurly.settings')->get('recurly_entity_type');
   switch ($operation) {
     case 'update_billing':
-      $entity_info = recurly_account_load(['account_code' => $context['account']->account_code], TRUE);
       return Url::fromRoute("entity.$entity_type_id.recurlyjs_billing", [$entity_type_id => $context['entity']->id()]);
 
     case 'subscribe':
