@@ -34,20 +34,20 @@ class RecurlySubscriptionReactivateController extends RecurlyController {
         $subscription = \Recurly_Subscription::get($subscription_id);
       }
       catch (\Recurly_NotFoundError $e) {
-        drupal_set_message($this->t('Subscription not found'));
+        $this->messenger()->addMessage($this->t('Subscription not found'));
         throw new NotFoundHttpException();
       }
     }
 
     try {
       $subscription->reactivate();
-      drupal_set_message($this->t('Plan @plan reactivated! Normal billing will resume on @date.', [
+      $this->messenger()->addMessage($this->t('Plan @plan reactivated! Normal billing will resume on @date.', [
         '@plan' => $subscription->plan->name,
         '@date' => $this->recurlyFormatter->formatDate($subscription->current_period_ends_at),
       ]));
     }
     catch (\Recurly_Error $e) {
-      drupal_set_message($this->t('The plan could not be reactivated because the billing service encountered an error.'));
+      $this->messenger()->addError($this->t('The plan could not be reactivated because the billing service encountered an error.'));
       return;
     }
 

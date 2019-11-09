@@ -49,13 +49,13 @@ services:
       - { name: event_subscriber }
   recurly.format_manager:
     class: Drupal\recurly\RecurlyFormatManager
-    arguments: ['@module_handler', '@config.factory', '@string_translation']
+    arguments: ['@module_handler', '@config.factory', '@string_translation', '@date.formatter']
   recurly.entity_type:
     class: Drupal\recurly\RecurlyEntityTypeInfo
     arguments: ['@config.factory']
   recurly.entity_operations:
     class: Drupal\recurly\RecurlyEntityOperations
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@messenger']
   recurly.recurly_preprocess:
     class: Drupal\recurly\RecurlyPreprocess
     arguments: ['@recurly.format_manager', '@config.factory']

@@ -76,7 +76,7 @@ function recurly_views_data() {
 
   // Join from recurly_account to all entity types, using the entity_type and
   // entity_id columns.
-  $entity_info = \Drupal::entityManager()->getDefinitions();
+  $entity_info = \Drupal::entityTypeManager()->getDefinitions();
 
   foreach (array_keys($entity_info) as $entity_type) {
     $recurly_account[$entity_type] = _recurly_entity_relationship_data('Recurly account', $entity_type);

@@ -113,7 +113,7 @@ class RecurlySubscriptionSelectPlanController extends RecurlyController {
    * Redirect anonymous users to registration when attempting to select plans.
    */
   public function redirectToRegistration() {
-    drupal_set_message(t('Create an account, or log in with an existing account, before selecting a plan.'), 'warning');
+    $this->messenger()->addWarning(t('Create an account, or log in with an existing account, before selecting a plan.'));
     return $this->redirect('user.register');
   }
 

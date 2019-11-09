@@ -140,14 +140,14 @@ class RecurlySubscriptionCancelConfirmForm extends RecurlyNonConfigForm {
     if ($form['cancel']['actions']['cancel']['#value'] === $clicked_button) {
       try {
         $subscription->cancel();
-        drupal_set_message($this->t('Plan @plan canceled! It will expire on @date.', [
+        $this->messenger()->addMessage($this->t('Plan @plan canceled! It will expire on @date.', [
           '@plan' => $subscription->plan->name,
           '@date' => $this->recurlyFormatter->formatDate($subscription->current_period_ends_at),
         ]));
         $form_state->setRedirect("entity.$entity_type.recurly_subscriptionlist", [$entity_type => $entity->id()]);
       }
       catch (\Recurly_Error $e) {
-        drupal_set_message($this->t('The plan could not be canceled because the billing service encountered an error.'), 'error');
+        $this->messenger()->addError($this->t('The plan could not be canceled because the billing service encountered an error.'));
         return;
       }
     }
@@ -166,11 +166,11 @@ class RecurlySubscriptionCancelConfirmForm extends RecurlyNonConfigForm {
             $subscription->terminateAndRefund();
             break;
         }
-        drupal_set_message($this->t('Plan @plan terminated!', ['@plan' => $subscription->plan->name]));
+        $this->messenger()->addMessage($this->t('Plan @plan terminated!', ['@plan' => $subscription->plan->name]));
         $form_state->setRedirect("entity.$entity_type.recurly_subscriptionlist", [$entity_type => $entity->id()]);
       }
       catch (\Recurly_Error $e) {
-        drupal_set_message($this->t('The plan could not be terminated because the billing service encountered an error: "@message"', ['@message' => $e->getMessage()]), 'error');
+        $this->messenger()->addError($this->t('The plan could not be terminated because the billing service encountered an error: "@message"', ['@message' => $e->getMessage()]));
         return;
       }
     }

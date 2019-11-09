@@ -127,7 +127,7 @@ class RecurlyRedeemCouponForm extends RecurlyNonConfigForm {
       // If the user already has a coupon, rebuild the form and ask for
       // confirmation.
       if (!$form_state->get('confirmed')) {
-        drupal_set_message($this->t('You already have an active coupon, are you sure you want to replace it?'), 'warning');
+        $this->messenger()->addWarning($this->t('You already have an active coupon, are you sure you want to replace it?'));
         $form_state->set('confirm', TRUE);
         $form_state->setRebuild(TRUE);
         return;
@@ -141,7 +141,7 @@ class RecurlyRedeemCouponForm extends RecurlyNonConfigForm {
           }
           catch (\Recurly_NotFoundError $e) {
             $this->logger('recurly')->error('Unable to remove existing coupon redemption: @error', ['@error' => $e->getMessage()]);
-            drupal_set_message('Unable to remove existing coupon.', 'error');
+            $this->messenger()->addError('Unable to remove existing coupon.');
             return;
           }
         }
@@ -154,7 +154,7 @@ class RecurlyRedeemCouponForm extends RecurlyNonConfigForm {
     }
     catch (\Exception $e) {
       $this->logger('recurly')->error('@error', ['@error' => $e->getMessage()]);
-      drupal_set_message($e->getMessage(), 'error');
+      $this->messenger()->addError($e->getMessage());
       return;
     }
 
@@ -162,10 +162,10 @@ class RecurlyRedeemCouponForm extends RecurlyNonConfigForm {
     // could not be applied. This is most likely because the code has already
     // reached the maximum number of redemptions or has expired.
     if (is_null($response)) {
-      drupal_set_message($this->t('Unable to redeem the coupon @code, the coupon may no longer be valid.', ['@code' => $coupon->coupon_code]), 'error');
+      $this->messenger()->addError($this->t('Unable to redeem the coupon @code, the coupon may no longer be valid.', ['@code' => $coupon->coupon_code]));
     }
     else {
-      drupal_set_message($this->t('The coupon @coupon has been applied to your account and will be redeemed the next time your subscription renews.', [
+      $this->messenger()->addMessage($this->t('The coupon @coupon has been applied to your account and will be redeemed the next time your subscription renews.', [
         '@coupon' => $this->recurlyFormatter->formatCoupon($coupon, $form_state->getValue(['coupon_currency']), FALSE),
       ]));
     }

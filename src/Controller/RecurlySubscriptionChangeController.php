@@ -31,7 +31,7 @@ class RecurlySubscriptionChangeController extends RecurlyController {
       $subscription = \Recurly_Subscription::get($subscription_id);
     }
     catch (\Recurly_NotFoundError $e) {
-      drupal_set_message($this->t('Subscription not found.'));
+      $this->messenger()->addMessage($this->t('Subscription not found.'));
       throw new NotFoundHttpException();
     }
 
@@ -40,7 +40,7 @@ class RecurlySubscriptionChangeController extends RecurlyController {
       $previous_plan = \Recurly_Plan::get($subscription->plan->plan_code);
     }
     catch (\Recurly_NotFoundError $e) {
-      drupal_set_message($this->t('Plan code "@plan" not found.', ['@plan' => $subscription->plan->plan_code]));
+      $this->messenger()->addMessage($this->t('Plan code "@plan" not found.', ['@plan' => $subscription->plan->plan_code]));
       throw new NotFoundHttpException();
     }
 
@@ -49,7 +49,7 @@ class RecurlySubscriptionChangeController extends RecurlyController {
       $new_plan = \Recurly_Plan::get($new_plan_code);
     }
     catch (\Recurly_NotFoundError $e) {
-      drupal_set_message($this->t('Plan code "@plan" not found.', ['@plan' => $new_plan_code]));
+      $this->messenger()->addMessage($this->t('Plan code "@plan" not found.', ['@plan' => $new_plan_code]));
       throw new NotFoundHttpException();
     }
 

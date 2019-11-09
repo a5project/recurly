@@ -64,7 +64,7 @@ class RecurlyJsSubscriptionSignupController extends ControllerBase {
       // ever see this signup page.
       if (($this->config('recurly.settings')->get('recurly_subscription_max')) === '1' && count($current_subscriptions) && empty($_POST)) {
         $current_subscription = reset($current_subscriptions);
-        drupal_set_message($this->t('This account already has a @plan plan!', ['@plan' => $current_subscription->plan->name]));
+        $this->messenger()->addMessage($this->t('This account already has a @plan plan!', ['@plan' => $current_subscription->plan->name]));
         if ($url = recurly_url('select_plan', ['entity_type' => $entity_type, 'entity' => $entity])) {
           return $this->redirect($url->getRouteName(), $url->getRouteParameters());
         }
@@ -72,7 +72,7 @@ class RecurlyJsSubscriptionSignupController extends ControllerBase {
       // Otherwise check if they already have one of this same plan.
       foreach ($current_subscriptions as $current_subscription) {
         if ($current_subscription->plan->plan_code === $plan_code && empty($_POST)) {
-          drupal_set_message($this->t('This account already has a @plan plan!', ['@plan' => $current_subscription->plan->name]));
+          $this->messenger()->addMessage($this->t('This account already has a @plan plan!', ['@plan' => $current_subscription->plan->name]));
           if ($url = recurly_url('subscribe', [
             'entity_type' => $entity_type,
             'entity' => $entity,

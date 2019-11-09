@@ -65,7 +65,7 @@ class RecurlyJsUpdateBillingForm extends RecurlyJsFormBase {
     }
     catch (\Recurly_NotFoundError $e) {
       $this->logger('recurlyjs')->notice('Unable to retrieve billing information. Received the following error: @error', ['@error' => $e->getMessage()]);
-      drupal_set_message($this->t('Unable to retrieve billing information.'), 'error');
+      $this->messenger()->addError($this->t('Unable to retrieve billing information.'));
       return $form;
     }
 
@@ -115,17 +115,17 @@ class RecurlyJsUpdateBillingForm extends RecurlyJsFormBase {
         // There was an error validating information in the form. For example,
         // credit card was declined. Let the user know. These errors are logged
         // in Recurly.
-        drupal_set_message($this->t('<strong>Unable to update account:</strong><br/>@error', ['@error' => $e->getMessage()]), 'error');
+        $this->messenger()->addError($this->t('<strong>Unable to update account:</strong><br/>@error', ['@error' => $e->getMessage()]));
       }
       catch (\Recurly_NotFoundError $e) {
-        drupal_set_message($this->t('Could not find account or token is invalid or expired.'), 'error');
+        $this->messenger()->addError($this->t('Could not find account or token is invalid or expired.'));
         $form_state->setRebuild(TRUE);
       }
       catch (\Recurly_Error $e) {
         // Catch all other errors. Log the details, and display a message for
         // the user.
         $this->logger('recurlyjs')->error('Billing information update error: @error', ['@error' => $e->getMessage()]);
-        drupal_set_message($this->t('An error occured while trying to update your account. Please contact a site administrator.'));
+        $this->messenger()->addMessage($this->t('An error occured while trying to update your account. Please contact a site administrator.'));
         $form_state->setRebuild(TRUE);
       }
     }

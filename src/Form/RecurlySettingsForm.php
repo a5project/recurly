@@ -32,9 +32,9 @@ class RecurlySettingsForm extends RecurlyConfigForm {
     $plan_options = $this->config('recurly.settings')->get('recurly_subscription_plans') ?: [];
 
     if (empty($plan_options) && $this->config('recurly.settings')->get('recurly_private_api_key') && $this->config('recurly.settings')->get('recurly_pages')) {
-      drupal_set_message($this->t('Recurly built-in pages are enabled, but no plans have yet been enabled. Enable plans on the <a href=":url">Subscription Plans page</a>.', [
+      $this->messenger()->addWarning($this->t('Recurly built-in pages are enabled, but no plans have yet been enabled. Enable plans on the <a href=":url">Subscription Plans page</a>.', [
         ':url' => Url::fromRoute('recurly.subscription_plans_overview')->toString(),
-      ]), 'warning', FALSE);
+      ]), FALSE);
     }
 
     // Add form elements to collect default account information.

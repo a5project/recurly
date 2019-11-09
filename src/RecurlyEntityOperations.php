@@ -4,6 +4,7 @@ namespace Drupal\recurly;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
@@ -26,17 +27,28 @@ class RecurlyEntityOperations {
   protected $stringTranslation;
 
   /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new RecurlyEntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
+    MessengerInterface $messenger,
     TranslationInterface $translation_manager = NULL) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->messenger = $messenger;
     $this->stringTranslation = $translation_manager;
   }
 
@@ -62,7 +74,7 @@ class RecurlyEntityOperations {
     }
 
     // Check if any of the mapping tokens have changed.
-    if (!$entity->getOriginalId() || !$original_entity = \Drupal::entityManager()->getStorage($entity_type)->load($entity->getOriginalId())) {
+    if (!$entity->getOriginalId() || !$original_entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity->getOriginalId())) {
       return;
     }
     $original_values = [];
@@ -113,7 +125,7 @@ class RecurlyEntityOperations {
         $recurly_account->update();
       }
       catch (\Recurly_Error $e) {
-        drupal_set_message($this->stringTranslation->translate('The billing system reported an error: "@error" To ensure proper billing, please correct the problem if possible or contact support.', ['@error' => $e->getMessage()]), 'warning');
+        $this->messenger->addWarning($this->stringTranslation->translate('The billing system reported an error: "@error" To ensure proper billing, please correct the problem if possible or contact support.', ['@error' => $e->getMessage()]));
         \Drupal::logger('recurly')->error('Account information could not be sent to the Recurly, it reported "@error" while trying to update <a href="@url">@title</a> with the values @values.', [
           '@error' => $e->getMessage(),
           '@title' => $entity->label(),

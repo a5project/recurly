@@ -72,7 +72,7 @@ class RecurlyInvoicesController extends RecurlyController {
       $invoice = \Recurly_Invoice::get($invoice_number);
     }
     catch (\Recurly_NotFoundError $e) {
-      drupal_set_message($this->t('Invoice not found'));
+      $this->messenger()->addMessage($this->t('Invoice not found'));
       throw new NotFoundHttpException();
     }
 
@@ -138,7 +138,7 @@ class RecurlyInvoicesController extends RecurlyController {
       $pdf = \Recurly_Invoice::getInvoicePdf($invoice_number);
     }
     catch (\Recurly_NotFoundError $e) {
-      drupal_set_message($this->t('Invoice not found'));
+      $this->messenger()->addMessage($this->t('Invoice not found'));
       throw new NotFoundHttpException();
     }
 

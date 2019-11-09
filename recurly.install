@@ -126,7 +126,7 @@ function recurly_uninstall() {
     ->clear('recurly_entity_type')
     ->save();
 
-  foreach (array_keys(\Drupal::entityManager()->getDefinitions()) as $entity_name) {
+  foreach (array_keys(\Drupal::entityTypeManager()->getDefinitions()) as $entity_name) {
     \Drupal::configFactory()->getEditable('recurly.settings')->clear('recurly_bundle_' . $entity_name)->save();
   }
 

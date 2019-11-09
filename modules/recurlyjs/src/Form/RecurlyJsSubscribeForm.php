@@ -107,7 +107,7 @@ class RecurlyJsSubscribeForm extends RecurlyJsFormBase {
       // There was an error validating information in the form. For example,
       // credit card was declined. We don't need to log these in Drupal, you can
       // find the errors logged within Recurly.
-      drupal_set_message($this->t('<strong>Unable to create subscription:</strong><br/>@error', ['@error' => $e->getMessage()]), 'error');
+      $this->messenger()->addError($this->t('<strong>Unable to create subscription:</strong><br/>@error', ['@error' => $e->getMessage()]));
       $form_state->setRebuild(TRUE);
       return;
     }
@@ -118,7 +118,7 @@ class RecurlyJsSubscribeForm extends RecurlyJsFormBase {
       // detailed version. There's probably nothing a user can do to correct
       // these errors so we don't need to display the details.
       $this->logger('recurlyjs')->error('Unable to create subscription. Received the following error: @error', ['@error' => $e->getMessage()]);
-      drupal_set_message($this->t('Unable to create subscription.'), 'error');
+      $this->messenger()->addError($this->t('Unable to create subscription.'));
       $form_state->setRebuild(TRUE);
       return;
     }
@@ -128,7 +128,7 @@ class RecurlyJsSubscribeForm extends RecurlyJsFormBase {
     $this->eventDispatcher->dispatch(RecurlyJsEvents::SUBSCRIPTION_CREATED, $event);
     $subscription = $event->getSubscription();
 
-    drupal_set_message($this->t('Account upgraded to @plan!', ['@plan' => $subscription->plan->name]));
+    $this->messenger()->addMessage($this->t('Account upgraded to @plan!', ['@plan' => $subscription->plan->name]));
     // Save the account locally immediately so that subscriber information may
     // be retrieved when the user is directed back to the /subscription tab.
     try {

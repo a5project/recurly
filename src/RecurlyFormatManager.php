@@ -4,6 +4,7 @@ namespace Drupal\recurly;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -46,6 +47,13 @@ class RecurlyFormatManager {
   protected $stringTranslation;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
    * Constructs the Recurly format manager.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -54,15 +62,19 @@ class RecurlyFormatManager {
    *   The config service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    */
   public function __construct(
     ModuleHandlerInterface $module_handler,
     ConfigFactoryInterface $config_factory,
-    TranslationInterface $translation_manager
+    TranslationInterface $translation_manager,
+    DateFormatterInterface $date_formatter
     ) {
     $this->moduleHandler = $module_handler;
     $this->recurlySettings = $config_factory->get('recurly.settings');
     $this->stringTranslation = $translation_manager;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -109,7 +121,7 @@ class RecurlyFormatManager {
       $timestamp = strtotime($date);
     }
 
-    return is_numeric($timestamp) ? format_date($timestamp, $format) : NULL;
+    return is_numeric($timestamp) ? $this->dateFormatter->format($timestamp, $format) : NULL;
   }
 
   /**

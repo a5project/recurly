@@ -117,20 +117,20 @@ class RecurlySubscriptionChangeConfirmForm extends RecurlyNonConfigForm {
         '%id' => $subscription->uuid,
         '@error' => $e->getMessage(),
       ]);
-      drupal_set_message($this->t('The plan could not be updated because the billing service encountered an error.'));
+      $this->messenger()->addError($this->t('The plan could not be updated because the billing service encountered an error.'));
       return;
     }
 
     $plan_changed_message = $this->t('Plan changed to @plan!', [
       '@plan' => $new_plan->name,
     ]);
-    drupal_set_message($plan_changed_message);
+    $this->messenger()->addMessage($plan_changed_message);
 
     if ($timeframe !== 'now') {
       $changes_active_message = $this->t('Plan changes will become active starting <strong>@date</strong>.', [
         '@date' => $this->recurlyFormatter->formatDate($subscription->current_period_ends_at),
       ]);
-      drupal_set_message($changes_active_message);
+      $this->messenger()->addMessage($changes_active_message);
     }
 
     $form_state->setRedirect("entity.$entity_type.recurly_subscriptionlist", [$entity_type => $entity->id()]);

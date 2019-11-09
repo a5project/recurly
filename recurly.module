@@ -330,11 +330,11 @@ function recurly_account_close($recurly_account, $cancelation_method = NULL) {
           if ($subscription->state === 'active') {
             $username = $recurly_account->username ? $recurly_account->username : $recurly_account->account_code;
             if ($cancelation_method === 'terminate_prorated') {
-              drupal_set_message(t('Prorated refund for @plan refunded to @username.', ['@plan' => $subscription->plan->name, '@username' => $username]));
+              \Drupal::messenger()->addMessage(t('Prorated refund for @plan refunded to @username.', ['@plan' => $subscription->plan->name, '@username' => $username]));
               $subscription->terminateAndPartialRefund();
             }
             else {
-              drupal_set_message(t('Full refund for @plan refunded to @username.', ['@plan' => $subscription->plan->name, '@username' => $username]));
+              \Drupal::messenger()->addMessage(t('Full refund for @plan refunded to @username.', ['@plan' => $subscription->plan->name, '@username' => $username]));
               $subscription->terminateAndRefund();
             }
           }

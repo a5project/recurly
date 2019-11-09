@@ -217,7 +217,7 @@ class RecurlySubscriptionPlansForm extends RecurlyConfigForm {
     // Save plan weights and statuses to config.
     $recurly_subscription_plans = $form_state->getValue('recurly_subscription_plans');
     $this->config('recurly.settings')->set('recurly_subscription_plans', $recurly_subscription_plans)->save();
-    drupal_set_message($this->t('Status and order of subscription plans updated!'));
+    $this->messenger()->addMessage($this->t('Status and order of subscription plans updated!'));
   }
 
 }

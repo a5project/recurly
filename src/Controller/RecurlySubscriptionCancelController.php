@@ -42,7 +42,7 @@ class RecurlySubscriptionCancelController extends RecurlyController {
         $subscription = \Recurly_Subscription::get($subscription_id);
       }
       catch (\Recurly_NotFoundError $e) {
-        drupal_set_message($this->t('Subscription not found'));
+        $this->messenger()->addMessage($this->t('Subscription not found'));
         throw new NotFoundHttpException();
       }
     }
