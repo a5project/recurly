@@ -278,7 +278,7 @@ class RecurlySettingsForm extends RecurlyConfigForm {
     $form['pages']['recurly_coupon_page'] = [
       '#title' => $this->t('Enable coupon redemption page'),
       '#type' => 'checkbox',
-      '#default_value' => $this->config('recurly.settings')->get('recurly_coupon_page') ?: 1,
+      '#default_value' => $this->config('recurly.settings')->get('recurly_coupon_page'),
       '#description' => $this->t('Show the "Redeem coupon" tab underneath the subscription page.'),
       '#states' => $pages_enabled,
     ];
