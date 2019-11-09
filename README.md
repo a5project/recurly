@@ -48,9 +48,7 @@ and then place it in [libraries/](https://www.drupal.org/node/1440066) so that
 By default, the Recurly module will provide built-in pages for managing
 subscriptions on a one-subscription-per-user basis. You may also enable the
 Recurly.js module *OR* the Recurly Managed Pages module to allow users to update
-their billing information securely. If you're using a more complicated
-subscription system, you should look into the Commerce Recurly module (not
-included as part of the main Recurly package).
+their billing information securely.
 
 While this module provides the ability to create, update and cancel
 subscriptions, it does *not* provide any built-in way to perform actions when
