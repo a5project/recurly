@@ -138,7 +138,7 @@ class RecurlyJsSubscribeForm extends RecurlyJsFormBase {
     catch (\Recurly_Error $e) {
       $this->logger('recurlyjs')->error('New subscriber account could not be retreived from Recurly. Received the following error: @error', ['@error' => $e->getMessage()]);
     }
-    return $this->redirect("entity.$entity_type.recurly_subscriptionlist", [
+    return $form_state->setRedirect("entity.$entity_type.recurly_subscriptionlist", [
       $entity->getEntityType()->getLowercaseLabel() => $entity->id(),
     ]);
   }
